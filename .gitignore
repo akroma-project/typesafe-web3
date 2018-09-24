@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.vscode/
+main.js
+app-builds/
+.DS_Store
+*.log
+*.lock
+
