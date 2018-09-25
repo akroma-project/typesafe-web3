@@ -22,14 +22,13 @@ describe('api', () => {
 
     it('should get block by number', async () => {
         const result = await sut.getBlockByNumber(1661071, true);
-        print(result);
+        // print(result);
         expect(result.data!.transactions).to.have.length(2);
     });
 
     it('should get block by number', async () => {
-        const result = await sut.getBlockByNumber('latest');
+        // const result = await sut.getBlockByNumber('latest');
         // print(result);
-        // expect(result.data!.transactions).to.have.length(2);
     });
 
     it('should get transactions for address', async () => {

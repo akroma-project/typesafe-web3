@@ -106,7 +106,7 @@ class TypeSafeWeb3 {
     public async getBlockByNumber(numberOrString: string | number, includeTransactions: boolean = false): Promise<Result<Block>> {
         const blockNumberOrRequest = Utils.isString(numberOrString) ? numberOrString : Utils.toHex(numberOrString);
         const result = await this.send<Block>('eth_getBlockByNumber', [blockNumberOrRequest, includeTransactions]);
-        // console.error(result);
+        console.error(JSON.stringify(result.data!.transactions));
         if (result.ok && result.data !== undefined) {
             const b = Block.fromJSON(result.data); // convert block properties into human readable.
             return Result.success<Block>(b);

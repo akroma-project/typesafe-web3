@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import Utils from '../utils';
+import { Transaction } from './transaction';
 
 export class Block {
     public number: number | undefined;
@@ -21,7 +22,7 @@ export class Block {
     public gasUsed = 0;
     public timestamp: number | string | undefined;
     public uncles: string[] = [];
-    public transactions: string[] = [];
+    public transactions: Transaction[] | string[] = [];
 
 
     /**
@@ -42,6 +43,14 @@ export class Block {
         if (block.number !== undefined) {
             const number = block.number as number;
             result.number = Utils.toDecimal(number);
+        }
+        for (let index = 0; index < block.transactions.length; index++) {
+            let tx = block.transactions[index];
+            if (Utils.isAddress(tx)) {
+                continue;
+            }
+            tx = Transaction.fromJSON(tx, block);
+            block.transactions[index] = tx;
         }
         return result;
     }

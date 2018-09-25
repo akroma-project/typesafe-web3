@@ -39,10 +39,6 @@ export class Transaction {
             const ts = block.timestamp as number;
             result.ts = Utils.toDecimal(ts);
         }
-        if (block && block.number !== undefined) {
-            const number = block.number as number;
-            result.number = Utils.toDecimal(number);
-        }
         return result;
     }
 }
