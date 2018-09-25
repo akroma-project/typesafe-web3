@@ -22,7 +22,7 @@ export class Block {
     public gasUsed = 0;
     public timestamp: number | string | undefined;
     public uncles: string[] = [];
-    public transactions: Transaction[] | string[] = [];
+    public transactions: Transaction[] | string[] | undefined;
 
 
     /**
