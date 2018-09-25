@@ -1,6 +1,6 @@
 {
   "name": "typesafe-web3",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "web3 in typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
