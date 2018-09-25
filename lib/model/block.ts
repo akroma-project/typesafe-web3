@@ -25,7 +25,7 @@ export class Block {
 
 
     /**
-     * Froms json
+     * Converts block properties into human readable format.
      * @param json returned from API call.
      * @returns block class object
      */
