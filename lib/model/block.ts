@@ -1,7 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import Utils from '../utils';
 import { Transaction } from './transaction';
-
 export class Block {
     public number: number | undefined;
     public hash: string | null = '';
@@ -23,7 +22,6 @@ export class Block {
     public timestamp: number | string | undefined;
     public uncles: string[] = [];
     public transactions: Transaction[] | string[] | undefined;
-
 
     /**
      * Converts block properties into human readable format.

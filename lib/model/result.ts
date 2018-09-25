@@ -3,12 +3,6 @@ export class Result<T> {
     public ok = false;
     public data: T | undefined;
 
-    // public constructor(options?: { ok: boolean, message: string, data: T | undefined }) {
-    //     this.ok = options !== undefined ? options.ok : false;
-    //     this.message = options !== undefined ? options.message : '';
-    //     this.data = options !== null ? options.data : {};
-    // }
-
     public static success<T>(data: T): Result<T> {
         const result = new Result<T>();
         result.ok = true;
