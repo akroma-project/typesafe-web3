@@ -8,7 +8,15 @@
     "build": "tsc",
     "test": "mocha --require ts-node/register test/**/*.ts"
   },
-  "author": "",
+  "author": "Eric Polerecky <eric@polerecky.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akroma-project/typesafe-web3.git"
+  },
+  "bugs": {
+    "url": "https://github.com/akroma-project/typesafe-web3/issues"
+  },
+  "homepage": "https://github.com/akroma-project/typesafe-web3#readme",
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.1.5",
