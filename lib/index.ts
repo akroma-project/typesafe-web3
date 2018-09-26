@@ -77,8 +77,10 @@ class TypeSafeWeb3 {
             if (tx.ok) {
                 const block = await this.getBlockByHash(tx.data!.blockHash);
                 if (block.ok) {
-                    const transaction = Transaction.fromJSON(tx.data!, block.data!);
-                    result.push(transaction);
+                    result.push({
+                        ...tx.data!,
+                        ts: block.data!.timestamp,
+                    });
                 }
             }
         }

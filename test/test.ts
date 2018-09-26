@@ -52,12 +52,6 @@ describe('getTransactionsByAddress', () => {
         // print(result);
         expect(result.data).to.have.length(24);
     });
-    // it('should return the 1st page of transactions', async () => {
-    //     const result = await sut.getTransactionsByAddress('0xf5e060a321650334973b044465427ea49815f755');
-    //     // print(result);
-    //     expect(result.data).to.have.length(24);
-    // });
-
 });
 
 describe('getTransactionsAndBlockByAddress', () => {
@@ -69,9 +63,10 @@ describe('getTransactionsAndBlockByAddress', () => {
         const result = await sut.getTransactionsAndBlockByAddress('0xf5e060a321650334973b044465427ea49815f755', 1);
         expect(result.data).to.have.length(10);
     });
-    it('only return the last transactions (4) because we page by 10 and there are 24 total transactions', async () => {
-        const result = await sut.getTransactionsAndBlockByAddress('0xf5e060a321650334973b044465427ea49815f755', 2);
-        expect(result.data).to.have.length(4);
+    it('only return the last transactions (1) because we page by 10 and there are 31 total transactions', async () => {
+        const result = await sut.getTransactionsAndBlockByAddress('0x082c720f520f650e12dfc908c3a383e90dda46b4', 3);
+        expect(result.data).to.have.length(1);
+        print(result);
     });
 
 });

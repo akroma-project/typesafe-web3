@@ -26,7 +26,7 @@ export class Transaction {
     * @param json returned from API call.
     * @returns transaction class object
     */
-    public static fromJSON(json: Transaction, block: Block|null): Transaction {
+    public static fromJSON(json: Transaction, block: Block | null): Transaction {
         const transaction = Object.create(Transaction.prototype);
         const result = Object.assign(transaction, json, {
             gasPrice: Utils.toDecimal(json.gasPrice),
@@ -35,6 +35,7 @@ export class Transaction {
             blockNumber: Utils.toDecimal(json.blockNumber),
             value: Utils.fromWei(json.value, 'ether'),
         });
+        // console.log(result.value + 'tx: ' + json.hash);
         if (block && block.timestamp !== undefined) {
             const ts = block.timestamp as number;
             result.ts = Utils.toDecimal(ts);

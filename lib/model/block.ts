@@ -44,11 +44,10 @@ export class Block {
         }
         for (let index = 0; index < block.transactions.length; index++) {
             let tx = block.transactions[index];
-            if (Utils.isAddress(tx)) {
-                continue;
+            if (Utils.isAddress(tx) === false) {
+                tx = Transaction.fromJSON(tx, block);
+                block.transactions[index] = tx;
             }
-            tx = Transaction.fromJSON(tx, block);
-            block.transactions[index] = tx;
         }
         return result;
     }
