@@ -35,6 +35,17 @@ class TypeSafeWeb3 {
         this.url = url;
     }
 
+
+    /**
+     * Eths get balance
+     * @param address {String}
+     * @param tag optional {Number|String} 'latest', 'earliest', 'pending'
+     * @returns balance {String} in wei
+     */
+    public async getBalance(address: string, tag: number | string = 'latest'): Promise<Result<string>> {
+        return await this.send<string>('eth_getBalance', [address, tag]);
+    }
+
     /**
     * get transactions by address
     * @param address

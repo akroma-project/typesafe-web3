@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { TypeSafeWeb3 } from '../lib/index';
 import { Result } from '../lib/model/result';
+import Utils from '../lib/utils';
 
 const sut = new TypeSafeWeb3();
 
@@ -40,6 +41,13 @@ describe('api', () => {
     it('should get transactions by hash', async () => {
         const result = await sut.getTransactionByHash('0x1c0a0ecbb51a6cd21a05152257b802e708061d27b7124b87eff2732d546d9ebc');
         // print(result);
+    });
+
+    it('should get balance for address', async () => {
+        const result = await sut.getBalance('0xd568ba7c2239ce5c93d500c975f0e341a6fb5326');
+        print(result);
+        const value = Utils.fromWei(result.data!, 'ether');
+        console.log(value);
     });
 });
 
