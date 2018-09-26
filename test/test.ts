@@ -32,13 +32,7 @@ describe('api', () => {
         // print(result);
     });
 
-    it('should get transactions for address', async () => {
-        const result = await sut.getTransactionsByAddress('0xf5e060a321650334973b044465427ea49815f755');
-        // print(result);
-        expect(result.data).to.have.length(24);
-    });
-
-    it('should get transactions by hash', async () => {
+    it('should get transaction by hash', async () => {
         const result = await sut.getTransactionByHash('0x1c0a0ecbb51a6cd21a05152257b802e708061d27b7124b87eff2732d546d9ebc');
         // print(result);
     });
@@ -51,6 +45,36 @@ describe('api', () => {
     });
 });
 
+
+describe('getTransactionsByAddress', () => {
+    it('should return a list of transactions', async () => {
+        const result = await sut.getTransactionsByAddress('0xf5e060a321650334973b044465427ea49815f755');
+        // print(result);
+        expect(result.data).to.have.length(24);
+    });
+    // it('should return the 1st page of transactions', async () => {
+    //     const result = await sut.getTransactionsByAddress('0xf5e060a321650334973b044465427ea49815f755');
+    //     // print(result);
+    //     expect(result.data).to.have.length(24);
+    // });
+
+});
+
+describe('getTransactionsAndBlockByAddress', () => {
+    it('should return the 1st 10 transactions', async () => {
+        const result = await sut.getTransactionsAndBlockByAddress('0xf5e060a321650334973b044465427ea49815f755', 0);
+        expect(result.data).to.have.length(10);
+    });
+    it('should be able to page of transactions by transaction index', async () => {
+        const result = await sut.getTransactionsAndBlockByAddress('0xf5e060a321650334973b044465427ea49815f755', 1);
+        expect(result.data).to.have.length(10);
+    });
+    it('only return the last transactions (4) because we page by 10 and there are 24 total transactions', async () => {
+        const result = await sut.getTransactionsAndBlockByAddress('0xf5e060a321650334973b044465427ea49815f755', 2);
+        expect(result.data).to.have.length(4);
+    });
+
+});
 
 function print(result: Result<any>) {
     console.log('message:' + result.message);

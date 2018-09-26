@@ -35,7 +35,6 @@ class TypeSafeWeb3 {
         this.url = url;
     }
 
-
     /**
      * Eths get balance
      * @param address {String}
@@ -49,11 +48,10 @@ class TypeSafeWeb3 {
     /**
     * get transactions by address
     * @param address
-    * @param [page]
     * @returns {string[]} transactions by address
     */
-    public async getTransactionsByAddress(address: string, page: number = -1): Promise<Result<string[]>> {
-        return await this.send<string[]>('eth_getTransactionsByAddress', [address, 0, 'latest', 'tf', 'sc', page, -1, false]);
+    public async getTransactionsByAddress(address: string): Promise<Result<string[]>> {
+        return await this.send<string[]>('eth_getTransactionsByAddress', [address, 0, 'latest', 'tf', 'sc', 0, -1, false]);
     }
 
     /**
@@ -62,32 +60,36 @@ class TypeSafeWeb3 {
    * @param [page]
    * @returns get transactions by address, and block timestamp
    */
-    public async getTransactionsAndBlockByAddress(address: string, page: number = -1): Promise<Result<Transaction[]>> {
-        const transactions = await this.send<string[]>('eth_getTransactionsByAddress', [address, 0, 'latest', 'tf', 'sc', page, -1, false]);
-        if (transactions.data === undefined || !transactions.ok) {
+    public async getTransactionsAndBlockByAddress(address: string, page: number = 0): Promise<Result<Transaction[]>> {
+        if (page < 0) {
+            return Result.error<Transaction[]>('page must be greater then 0');
+        }
+        const start = page === 0 ? 0 : page * 10;
+        const end = start + 10;
+        const transactions = await this.send<string[]>('eth_getTransactionsByAddress', [address, 0, 'latest', 'tf', 'sc', start, end, false]);
+        if (!transactions.ok) {
             return Result.error<Transaction[]>(transactions.message);
         }
         const result: Transaction[] = [];
-        transactions.data.forEach(async element => {
+        for (let index = 0; index < transactions.data!.length; index++) {
+            const element = transactions.data![index];
             const tx = await this.getTransactionByHash(element);
-            if (tx.data !== undefined && tx.ok) {
-                const block = await this.getBlockByHash(tx.data.blockHash);
-                if (block.ok && block.data !== undefined) {
-                    result.push({
-                        ...tx.data,
-                        ts: block.data.timestamp,
-                    });
+            if (tx.ok) {
+                const block = await this.getBlockByHash(tx.data!.blockHash);
+                if (block.ok) {
+                    const transaction = Transaction.fromJSON(tx.data!, block.data!);
+                    result.push(transaction);
                 }
             }
-        });
+        }
         return Result.success<Transaction[]>(result);
     }
 
 
     public async getTransactionByHash(hash: string): Promise<Result<Transaction>> {
         const result = await this.send<Transaction>('eth_getTransactionByHash', [hash]);
-        if (result.ok && result.data !== undefined) {
-            const b = Transaction.fromJSON(result.data, null);
+        if (result.ok) {
+            const b = Transaction.fromJSON(result.data!, null);
             return Result.success<Transaction>(b);
         }
         return result;
@@ -108,12 +110,12 @@ class TypeSafeWeb3 {
         return result;
     }
 
-     /**
-     * Gets block by number
-     * @param numberOrString number | string ('latest', 'pending', 'earliest')
-     * @param includeTransactions boolean - include full transactions, default false
-     * @returns block by number
-     */
+    /**
+    * Gets block by number
+    * @param numberOrString number | string ('latest', 'pending', 'earliest')
+    * @param includeTransactions boolean - include full transactions, default false
+    * @returns block by number
+    */
     public async getBlockByNumber(numberOrString: string | number, includeTransactions: boolean = false): Promise<Result<Block>> {
         const blockNumberOrRequest = Utils.isString(numberOrString) ? numberOrString : Utils.toHex(numberOrString);
         const result = await this.send<Block>('eth_getBlockByNumber', [blockNumberOrRequest, includeTransactions]);
