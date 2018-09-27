@@ -36,7 +36,7 @@ class TypeSafeWeb3 {
     }
 
     /**
-     * Eths get balance
+     * get balance
      * @param address {String}
      * @param tag optional {Number|String} 'latest', 'earliest', 'pending'
      * @returns balance {String} in wei
@@ -46,12 +46,23 @@ class TypeSafeWeb3 {
     }
 
     /**
+    * get balance
+    * @param address {String}
+    * @returns amount of transactions {String} hex encoded
+    */
+    public async getTransactionCountByAddress(address: string, direction: string = 'tf'): Promise<Result<number>> {
+        const result = await this.send<number>('eth_getTransactionCountByAddress', [address, 0, 'latest', direction, 'sc', false]);
+        result.data = (result.ok) ? Utils.toDecimal(result.data!) : result.data;
+        return result;
+    }
+
+    /**
     * get transactions by address
     * @param address
     * @returns {string[]} transactions by address
     */
-    public async getTransactionsByAddress(address: string): Promise<Result<string[]>> {
-        return await this.send<string[]>('eth_getTransactionsByAddress', [address, 0, 'latest', 'tf', 'sc', 0, -1, false]);
+    public async getTransactionsByAddress(address: string, direction: string = 'tf'): Promise<Result<string[]>> {
+        return await this.send<string[]>('eth_getTransactionsByAddress', [address, 0, 'latest', direction, 'sc', 0, -1, false]);
     }
 
     /**
