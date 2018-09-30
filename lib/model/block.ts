@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js';
-import Utils from '../utils';
+import { Utils } from '../utils';
 import { Transaction } from './transaction';
 export class Block {
     public number: number | undefined;

@@ -17,7 +17,7 @@ import axios, { AxiosError } from 'axios';
 import { Block } from './model/block';
 import { NetworkResponse, Result } from './model/result';
 import { Transaction } from './model/transaction';
-import Utils from './utils';
+import { Utils } from './utils';
 const u = new Utils();
 
 /**

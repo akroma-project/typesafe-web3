@@ -2,7 +2,7 @@ import { BigNumber } from 'bignumber.js';
 import { sha3 } from './sha3';
 import * as utf8 from 'utf8';
 
-export default class Utils {
+class Utils {
 
     private unitMap: any = {
         'noether': '0',
@@ -583,3 +583,5 @@ export default class Utils {
         return false;
     }
 }
+
+export { Utils };

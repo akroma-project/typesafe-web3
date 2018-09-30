@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { TypeSafeWeb3 } from '../lib/index';
 import { Result } from '../lib/model/result';
-import Utils from '../lib/utils';
+import { Utils } from '../lib/utils';
 
 const sut = new TypeSafeWeb3();
 const u = new Utils();
