@@ -27,18 +27,19 @@ export class Transaction {
     * @returns transaction class object
     */
     public static fromJSON(json: Transaction, block: Block | null): Transaction {
+        const u = new Utils();
         const transaction = Object.create(Transaction.prototype);
         const result = Object.assign(transaction, json, {
-            gasPrice: Utils.toDecimal(json.gasPrice),
-            gas: Utils.toDecimal(json.gas),
-            nonce: Utils.toDecimal(json.nonce),
-            blockNumber: Utils.toDecimal(json.blockNumber),
-            value: Utils.fromWei(json.value, 'ether'),
+            gasPrice: u.toDecimal(json.gasPrice),
+            gas: u.toDecimal(json.gas),
+            nonce: u.toDecimal(json.nonce),
+            blockNumber: u.toDecimal(json.blockNumber),
+            value: u.fromWei(json.value, 'ether'),
         });
         // console.log(result.value + 'tx: ' + json.hash);
         if (block && block.timestamp !== undefined) {
             const ts = block.timestamp as number;
-            result.ts = Utils.toDecimal(ts);
+            result.ts = u.toDecimal(ts);
         }
         return result;
     }

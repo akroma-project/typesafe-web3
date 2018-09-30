@@ -18,6 +18,7 @@ import { Block } from './model/block';
 import { NetworkResponse, Result } from './model/result';
 import { Transaction } from './model/transaction';
 import Utils from './utils';
+const u = new Utils();
 
 /**
  * Type safe web3
@@ -52,7 +53,7 @@ class TypeSafeWeb3 {
     */
     public async getTransactionCountByAddress(address: string, direction: string = 'tf'): Promise<Result<number>> {
         const result = await this.send<number>('eth_getTransactionCountByAddress', [address, 0, 'latest', direction, 'sc', false]);
-        result.data = (result.ok) ? Utils.toDecimal(result.data!) : result.data;
+        result.data = (result.ok) ? u.toDecimal(result.data!) : result.data;
         return result;
     }
 
@@ -130,7 +131,7 @@ class TypeSafeWeb3 {
     * @returns block by number
     */
     public async getBlockByNumber(numberOrString: string | number, includeTransactions: boolean = false): Promise<Result<Block>> {
-        const blockNumberOrRequest = Utils.isString(numberOrString) ? numberOrString : Utils.toHex(numberOrString);
+        const blockNumberOrRequest = u.isString(numberOrString) ? numberOrString : u.toHex(numberOrString);
         const result = await this.send<Block>('eth_getBlockByNumber', [blockNumberOrRequest, includeTransactions]);
         if (result.ok && result.data !== undefined) {
             const b = Block.fromJSON(result.data); // convert block properties into human readable.

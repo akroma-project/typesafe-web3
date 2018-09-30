@@ -4,6 +4,7 @@ import { Result } from '../lib/model/result';
 import Utils from '../lib/utils';
 
 const sut = new TypeSafeWeb3();
+const u = new Utils();
 
 describe('api', () => {
     it('should have a listening method', async () => {
@@ -40,7 +41,7 @@ describe('api', () => {
     it('should get balance for address', async () => {
         const result = await sut.getBalance('0xd568ba7c2239ce5c93d500c975f0e341a6fb5326');
         // print(result);
-        const value = Utils.fromWei(result.data!, 'ether');
+        const value = u.fromWei(result.data!, 'ether');
         console.log(value);
     });
 });
@@ -102,10 +103,10 @@ describe('getTransactionCountByAddress', () => {
 
 describe('Utils', () => {
     it('decode', () => {
-        const v = Utils.toDecimal('0x2e7');
+        const v = u.toDecimal('0x2e7');
         expect(v).eq(743);
 
-        const t = Utils.toDecimal('0x18');
+        const t = u.toDecimal('0x18');
         expect(t).eq(24);
     });
 });

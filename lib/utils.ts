@@ -4,7 +4,7 @@ import * as utf8 from 'utf8';
 
 export default class Utils {
 
-    private static unitMap: any = {
+    private unitMap: any = {
         'noether': '0',
         'wei': '1',
         'kwei': '1000',
@@ -42,7 +42,7 @@ export default class Utils {
      * @param {String} sign, by default 0
      * @returns {String} right aligned string
      */
-    public static padLeft(string: string, chars: number, sign: string = ''): string {
+    public padLeft(string: string, chars: number, sign: string = ''): string {
         return new Array(chars - string.length + 1).join(sign ? sign : '0') + string;
     }
 
@@ -55,7 +55,7 @@ export default class Utils {
      * @param {String} sign, by default 0
      * @returns {String} right aligned string
      */
-    public static padRight(string: string, chars: number, sign: string): string {
+    public padRight(string: string, chars: number, sign: string): string {
         return string + (new Array(chars - string.length + 1).join(sign ? sign : '0'));
     }
 
@@ -66,7 +66,7 @@ export default class Utils {
      * @param {String} string in hex
      * @returns {String} ascii string representation of hex value
      */
-    public static toUtf8(hex: string): string {
+    public toUtf8(hex: string): string {
         // Find termination
         let str = '';
         let i = 0;
@@ -92,7 +92,7 @@ export default class Utils {
      * @param {String} string in hex
      * @returns {String} ascii string representation of hex value
      */
-    public static toAscii(hex: string): string {
+    public toAscii(hex: string): string {
         // Find termination
         let str = '';
         let i = 0;
@@ -116,7 +116,7 @@ export default class Utils {
      * @param {Boolean} allowZero to convert code point zero to 00 instead of end of string
      * @returns {String} hex representation of input string
      */
-    public static fromUtf8(str: string, allowZero: boolean): string {
+    public fromUtf8(str: string, allowZero: boolean): string {
         str = utf8.encode(str);
         let hex = '';
         for (let i = 0; i < str.length; i++) {
@@ -143,7 +143,7 @@ export default class Utils {
      * @param {Number} optional padding
      * @returns {String} hex representation of input string
      */
-    public static fromAscii(str: string, num: number = 0): string {
+    public fromAscii(str: string, num: number = 0): string {
         let hex = '';
         for (let i = 0; i < str.length; i++) {
             const code = str.charCodeAt(i);
@@ -160,7 +160,7 @@ export default class Utils {
      * @param {Object} json-abi
      * @return {String} full fnction/event name
      */
-    public static transformToFullName(json: any): string {
+    public transformToFullName(json: any): string {
         if (json.name.indexOf('(') !== -1) {
             return json.name;
         }
@@ -176,7 +176,7 @@ export default class Utils {
      * @param {String} name of function/event
      * @returns {String} display name for function/event eg. multiply(uint256) -> multiply
      */
-    public static extractDisplayName(name: string): string {
+    public extractDisplayName(name: string): string {
         const stBracket = name.indexOf('(');
         const endBracket = name.indexOf(')');
         return (stBracket !== -1 && endBracket !== -1) ? name.substr(0, stBracket) : name;
@@ -189,7 +189,7 @@ export default class Utils {
      * @param {String} name of function/event
      * @returns {String} type name for function/event eg. multiply(uint256) -> uint256
      */
-    public static extractTypeName(name: string): string {
+    public extractTypeName(name: string): string {
         const stBracket = name.indexOf('(');
         const endBracket = name.indexOf(')');
         return (stBracket !== -1 && endBracket !== -1) ? name.substr(stBracket + 1, endBracket - stBracket - 1).replace(' ', '') : '';
@@ -202,8 +202,8 @@ export default class Utils {
      * @param {String|Number|BigNumber}
      * @return {String}
      */
-    public static toDecimal(value: string | number | BigNumber): number {
-        return Utils.toBigNumber(value).toNumber();
+    public toDecimal(value: string | number | BigNumber): number {
+        return this.toBigNumber(value).toNumber();
     }
 
     /**
@@ -213,8 +213,8 @@ export default class Utils {
      * @param {String|Number|BigNumber}
      * @return {String}
      */
-    public static fromDecimal(value: number): string {
-        const number = Utils.toBigNumber(value);
+    public fromDecimal(value: number): string {
+        const number = this.toBigNumber(value);
         const result = number.toString(16);
 
         return number.isLessThan(0) ? '-0x' + result.substr(1) : '0x' + result;
@@ -229,35 +229,35 @@ export default class Utils {
      * @param {String|Number|BigNumber|Object}
      * @return {String}
      */
-    public static toHex(val: any) {
+    public toHex(val: any) {
 
         // const toHex = function (val) {
         /*jshint maxcomplexity: 8 */
 
-        if (Utils.isBoolean(val)) {
-            return Utils.fromDecimal(+val);
+        if (this.isBoolean(val)) {
+            return this.fromDecimal(+val);
         }
 
-        if (Utils.isBigNumber(val)) {
-            return Utils.fromDecimal(val);
+        if (this.isBigNumber(val)) {
+            return this.fromDecimal(val);
         }
 
         if (typeof val === 'object') {
-            return Utils.fromUtf8(JSON.stringify(val), false);
+            return this.fromUtf8(JSON.stringify(val), false);
         }
 
         // if its a negative number, pass it through fromDecimal
-        if (Utils.isString(val)) {
+        if (this.isString(val)) {
             if (val.indexOf('-0x') === 0) {
-                return Utils.fromDecimal(val);
+                return this.fromDecimal(val);
             } else if (val.indexOf('0x') === 0) {
                 return val;
             } else if (!isFinite(val)) {
-                return Utils.fromUtf8(val, true);
+                return this.fromUtf8(val, true);
             }
         }
 
-        return Utils.fromDecimal(val);
+        return this.fromDecimal(val);
     }
 
     /**
@@ -268,12 +268,12 @@ export default class Utils {
      * @returns {BigNumber} value of the unit (in Wei)
      * @throws error if the unit is not correct:w
      */
-    public static getValueOfUnit(unit: string): BigNumber {
+    public getValueOfUnit(unit: string): BigNumber {
         // const getValueOfUnit = function (unit) {
         unit = unit ? unit.toLowerCase() : 'ether';
-        const unitValue = Utils.unitMap[unit];
+        const unitValue = this.unitMap[unit];
         if (unitValue === undefined) {
-            throw new Error('This unit doesn\'t exists, please use the one of the following units' + JSON.stringify(Utils.unitMap, null, 2));
+            throw new Error('This unit doesn\'t exists, please use the one of the following units' + JSON.stringify(this.unitMap, null, 2));
         }
         return new BigNumber(unitValue, 10);
     }
@@ -299,10 +299,10 @@ export default class Utils {
      * @param {String} unit the unit to convert to, default ether
      * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
     */
-    public static fromWei(number: string|number, unit: string) {
-        const returnValue = Utils.toBigNumber(number).dividedBy(Utils.getValueOfUnit(unit));
+    public fromWei(number: string|number, unit: string) {
+        const returnValue = this.toBigNumber(number).dividedBy(this.getValueOfUnit(unit));
 
-        return Utils.isBigNumber(number) ? returnValue : returnValue.toString(10);
+        return this.isBigNumber(number) ? returnValue : returnValue.toString(10);
     }
 
     /**
@@ -326,10 +326,10 @@ export default class Utils {
      * @param {String} unit the unit to convert from, default ether
      * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
     */
-    public static toWei(number: number, unit: string): string|object {
-        const returnValue = Utils.toBigNumber(number).times(Utils.getValueOfUnit(unit));
+    public toWei(number: number, unit: string): string|object {
+        const returnValue = this.toBigNumber(number).times(this.getValueOfUnit(unit));
 
-        return Utils.isBigNumber(number) ? returnValue : returnValue.toString(10);
+        return this.isBigNumber(number) ? returnValue : returnValue.toString(10);
     }
 
     /**
@@ -339,14 +339,14 @@ export default class Utils {
      * @param {Number|String|BigNumber} a number, string, HEX string or BigNumber
      * @return {BigNumber} BigNumber
     */
-    public static toBigNumber(number: string | number | BigNumber): BigNumber {
+    public toBigNumber(number: string | number | BigNumber): BigNumber {
         /*jshint maxcomplexity:5 */
         number = number || 0;
-        if (Utils.isBigNumber(number)) {
+        if (this.isBigNumber(number)) {
             return number as BigNumber;
         }
 
-        if (Utils.isString(number)) {
+        if (this.isString(number)) {
             const str = number as string;
             if (str.indexOf('0x') === 0 || str.indexOf('-0x') === 0) {
                 return new BigNumber(str.replace('0x', ''), 16);
@@ -363,8 +363,8 @@ export default class Utils {
      * @param {Number|String|BigNumber}
      * @return {BigNumber}
      */
-    public static toTwosComplement(number: number | string | BigNumber): BigNumber {
-        const bigNumber: BigNumber = Utils.toBigNumber(number);
+    public toTwosComplement(number: number | string | BigNumber): BigNumber {
+        const bigNumber: BigNumber = this.toBigNumber(number);
         if (bigNumber.isLessThan(0)) {
             return new BigNumber('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 16).plus(bigNumber).plus(1);
         }
@@ -378,7 +378,7 @@ export default class Utils {
      * @param {String} address the given HEX adress
      * @return {Boolean}
     */
-    public static isStrictAddress(address: string): boolean {
+    public isStrictAddress(address: string): boolean {
         return /^0x[0-9a-f]{40}$/i.test(address);
     }
 
@@ -389,7 +389,7 @@ export default class Utils {
      * @param {String} address the given HEX adress
      * @return {Boolean}
     */
-    public static isAddress(address: string): boolean {
+    public isAddress(address: string): boolean {
         if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
             // check if it has the basic requirements of an address
             return false;
@@ -398,7 +398,7 @@ export default class Utils {
             return true;
         } else {
             // Otherwise check each case
-            return Utils.isChecksumAddress(address);
+            return this.isChecksumAddress(address);
         }
     }
 
@@ -409,7 +409,7 @@ export default class Utils {
      * @param {String} address the given HEX adress
      * @return {Boolean}
     */
-    public static isChecksumAddress(address: string): boolean {
+    public isChecksumAddress(address: string): boolean {
         // Check each case
         address = address.replace('0x', '');
         const addressHash = sha3(address.toLowerCase());
@@ -432,7 +432,7 @@ export default class Utils {
      * @param {String} address the given HEX adress
      * @return {String}
     */
-    public static toChecksumAddress(address: string): string {
+    public toChecksumAddress(address: string): string {
         if (typeof address === 'undefined') { return ''; }
 
         address = address.toLowerCase().replace('0x', '');
@@ -457,8 +457,8 @@ export default class Utils {
      * @param {String} address
      * @return {String} formatted address
      */
-    public static toAddress(address: string): string {
-        if (Utils.isStrictAddress(address)) {
+    public toAddress(address: string): string {
+        if (this.isStrictAddress(address)) {
             return address;
         }
 
@@ -466,7 +466,7 @@ export default class Utils {
             return '0x' + address;
         }
 
-        return '0x' + Utils.padLeft(Utils.toHex(address).substr(2), 40);
+        return '0x' + this.padLeft(this.toHex(address).substr(2), 40);
     }
 
     /**
@@ -476,7 +476,7 @@ export default class Utils {
      * @param {Object}
      * @return {Boolean}
      */
-    public static isBigNumber(object: any): boolean {
+    public isBigNumber(object: any): boolean {
         return (object && (object instanceof BigNumber || (object.constructor && object.constructor.name === 'BigNumber')));
     }
 
@@ -487,7 +487,7 @@ export default class Utils {
      * @param {Object}
      * @return {Boolean}
      */
-    public static isString(object: any): boolean {
+    public isString(object: any): boolean {
         return typeof object === 'string' ||
             (object && object.constructor && object.constructor.name === 'String');
     }
@@ -499,7 +499,7 @@ export default class Utils {
      * @param {Object}
      * @return {Boolean}
      */
-    public static isFunction(object: any): boolean {
+    public isFunction(object: any): boolean {
         return typeof object === 'function';
     }
 
@@ -510,7 +510,7 @@ export default class Utils {
      * @param {Object}
      * @return {Boolean}
      */
-    public static isObject(object: any): boolean {
+    public isObject(object: any): boolean {
         return object !== null && !(Array.isArray(object)) && typeof object === 'object';
     }
 
@@ -521,7 +521,7 @@ export default class Utils {
      * @param {Object}
      * @return {Boolean}
      */
-    public static isBoolean(object: object): boolean {
+    public isBoolean(object: object): boolean {
         return typeof object === 'boolean';
     }
 
@@ -532,7 +532,7 @@ export default class Utils {
      * @param {Object}
      * @return {Boolean}
      */
-    public static isArray(object: object): boolean {
+    public isArray(object: object): boolean {
         return Array.isArray(object);
     }
 
@@ -543,7 +543,7 @@ export default class Utils {
      * @param {String}
      * @return {Boolean}
      */
-    public static isJson(str: string): boolean {
+    public isJson(str: string): boolean {
         try {
             return !!JSON.parse(str);
         } catch (e) {
@@ -558,7 +558,7 @@ export default class Utils {
      * @param {String} hex encoded bloom filter
      * @return {Boolean}
      */
-    public static isBloom(bloom: string): boolean {
+    public isBloom(bloom: string): boolean {
         if (!/^(0x)?[0-9a-f]{512}$/i.test(bloom)) {
             return false;
         } else if (/^(0x)?[0-9a-f]{512}$/.test(bloom) || /^(0x)?[0-9A-F]{512}$/.test(bloom)) {
@@ -574,7 +574,7 @@ export default class Utils {
      * @param {String} hex encoded topic
      * @return {Boolean}
      */
-    public static isTopic(topic: string): boolean {
+    public isTopic(topic: string): boolean {
         if (!/^(0x)?[0-9a-f]{64}$/i.test(topic)) {
             return false;
         } else if (/^(0x)?[0-9a-f]{64}$/.test(topic) || /^(0x)?[0-9A-F]{64}$/.test(topic)) {

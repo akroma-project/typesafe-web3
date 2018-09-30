@@ -29,22 +29,23 @@ export class Block {
      * @returns block class object
      */
     public static fromJSON(json: Block): Block {
+        const u = new Utils();
         const block = Object.create(Block.prototype);
         const result = Object.assign(block, json, {
-            gasLimit: Utils.toDecimal(json.gasLimit),
-            gasUsed: Utils.toDecimal(json.gasUsed),
-            size: Utils.toDecimal(json.size),
-            timestamp: Utils.toDecimal(json.timestamp!),
-            difficulty: Utils.toBigNumber(json.difficulty),
-            totalDifficulty: Utils.toBigNumber(json.totalDifficulty),
+            gasLimit: u.toDecimal(json.gasLimit),
+            gasUsed: u.toDecimal(json.gasUsed),
+            size: u.toDecimal(json.size),
+            timestamp: u.toDecimal(json.timestamp!),
+            difficulty: u.toBigNumber(json.difficulty),
+            totalDifficulty: u.toBigNumber(json.totalDifficulty),
         });
         if (block.number !== undefined) {
             const number = block.number as number;
-            result.number = Utils.toDecimal(number);
+            result.number = u.toDecimal(number);
         }
         for (let index = 0; index < block.transactions.length; index++) {
             let tx = block.transactions[index];
-            if (Utils.isAddress(tx) === false) {
+            if (u.isAddress(tx) === false) {
                 tx = Transaction.fromJSON(tx, block);
                 block.transactions[index] = tx;
             }
