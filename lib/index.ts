@@ -1,5 +1,5 @@
 /*! *****************************************************************************
-Copyright (c) Akroma, Akroma.io. All rights reserved.
+Copyright (c) Akroma, Akroma.org. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the
 License at http://www.apache.org/licenses/LICENSE-2.0
@@ -139,12 +139,11 @@ class TypeSafeWeb3 {
   }
 
   public async getContractTransfers(address: string): Promise<Result<any>> {
-    const transfer_hash = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
-    const from_block = "0x0";
-    const result = await this.send<Block>("eth_getLogs", [{ address: address, fromBlock: from_block, topics: [transfer_hash] }]);
+    const transferHash = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
+    const fromBlock = "0x0";
+    const result = await this.send<Block>("eth_getLogs", [{ address, fromBlock, topics: [transferHash] }]);
     if (result.ok && result.data !== undefined) {
       // const b = Block.fromJSON(result.data);
-      console.log(result.data);
       return Result.success<any>(result.data);
     }
     return result;
@@ -157,8 +156,8 @@ class TypeSafeWeb3 {
   private async send<T>(method: string, params?: object): Promise<Result<T>> {
     const data = JSON.stringify({
       jsonrpc: "2.0",
-      method: method,
-      params: params,
+      method,
+      params,
       id: 1, // TODO: random and return request id.
     });
     try {

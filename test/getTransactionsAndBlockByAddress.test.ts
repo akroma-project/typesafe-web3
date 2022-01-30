@@ -16,6 +16,5 @@ describe("getTransactionsAndBlockByAddress", () => {
   it("only return the last transactions (4) because we page by 10 and there are 104 total transactions", async () => {
     const result = await sut.getTransactionsAndBlockByAddress("0x082c720f520f650e12dfc908c3a383e90dda46b4", 10);
     expect(result.data).toHaveLength(4);
-    // print(result);
   });
 });
